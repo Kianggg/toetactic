@@ -1,0 +1,25 @@
+<html>
+  <script src="https://code.jquery.com/jquery-3.6.3.js"></script>
+  <style type="text/css">
+    body {text-align:center; vertical-align:middle; font-size:large; font-family: Verdana, sans-serif;}
+    ul {list-style:none; display:grid;}
+    row {display:inline-flex;}
+    li {height:50px; width:50px; border: 0.5px solid #FFFFFF}
+  </style>
+  <body>
+    <ul id="tictactoe">
+    </ul>
+  </body>
+  <script>
+    let numRows = 3;
+    let numColumns = 3;
+    for (let i = 0; i < numRows; i++)
+    {
+      $("#tictactoe").append("<row></row>");
+    }
+    for (let n = 0; n < numColumns; n++)
+    {
+      $("row").append("<li>___</li>");
+    }
+  </script>
+</html>
