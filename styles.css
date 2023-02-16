@@ -45,13 +45,13 @@ button:hover {
 }
 
 .blank {
-    background-image: url("/images/TileBlank_256.png");
+    background-image: url("images/TileBlank_256.png");
 }
 
 .X {
-    background-image: url("/images/TileX_256.png");
+    background-image: url("images/TileX_256.png");
 }
 
 .O {
-    background-image: url("/images/TileO_256.png");
+    background-image: url("images/TileO_256.png");
 }
