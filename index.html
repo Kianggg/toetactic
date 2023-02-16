@@ -1,15 +1,25 @@
 <html>
   <script src="https://code.jquery.com/jquery-3.6.3.js"></script>
-  <style type="text/css">
-    body {text-align:center; vertical-align:middle; font-size:large; font-family: Verdana, sans-serif;}
-    ul {list-style:none; display:grid;}
-    row {display:inline-flex;}
-    li {height:50px; width:50px; border: 0.5px solid #FFFFFF}
-  </style>
+
+  <head>
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/images/TicTacToeFaviconMatched.png">
+    <!-- CSS and Font -->
+    <link href="styles.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Gaegu">
+    <!-- Site Title -->
+    <title>Tic-Tac-Toe</title>
+  </head>
+
   <body>
-    <ul id="tictactoe">
-    </ul>
+    <span id="announcements">
+    </span>
+    <div id="gameboard">
+      <ul id="tictactoe">
+      </ul>
+    </div>
   </body>
+
   <script>
     let numRows = 3;
     let numColumns = 3;
@@ -19,7 +29,130 @@
     }
     for (let n = 0; n < numColumns; n++)
     {
-      $("row").append("<li>___</li>");
+      $("row").append('<li><button></button></li>');
+    }
+
+    /* Dynamically set cell IDs */
+    $("button").each(function(index) {
+      $(this).attr("id", index);
+      $(this).attr("class", "blank");
+    });
+
+    /* Setting up first turn */
+    let turn = 0;
+    let gameActive = true;
+    $("#announcements").text("O moves first");
+
+    /* Handling a Click */
+    $(document).ready(function() {
+      $("button").click(function() {
+
+        /* Only work if game is active */
+        if (!gameActive) {
+          resetGame();
+          return;
+        }
+
+        let id = $(this).attr('id');
+
+        let player = turn % 2;
+
+        /* Change image of clicked button and text of announcements */
+        if (player == 0) {
+          $(this).attr("class", "O");
+          $("#announcements").text("X to move");
+        }
+        else {
+          $(this).attr("class", "X");
+          $("#announcements").text("O to move");
+        }
+        turn++;
+
+        /* Check to see if game has ended. Board IDs:
+
+            0 1 2
+            3 4 5
+            6 7 8
+
+        */
+
+        let winningMoves = [
+          [[3, 6], [4, 8], [1, 2]], /* If a player marks square with ID 0, it's a win if they are also in squares 3 and 6, 4 and 8, OR 1 and 2. */
+          [[0, 2], [4, 7]],
+          [[0, 1], [4, 6], [5, 8]],
+          [[0, 6], [4, 5]],
+          [[3, 5], [1, 7], [0, 8], [2, 6]],
+          [[3, 4], [2, 8]],
+          [[0, 3], [2, 4], [7, 8]],
+          [[1, 4], [6, 8]],
+          [[6, 7], [0, 4], [2, 5]],
+        ];
+
+        for (let n = 0; n < winningMoves[id].length; n++) {
+          let pair = winningMoves[id][n];
+
+          if (player == 0) /* Check for O */
+          {
+            if (($("#" + pair[0]).attr("class") == "O") &&
+                ($("#" + pair[1]).attr("class") == "O"))
+            {
+              endGame(0);
+              return;
+            }
+          }
+          else /* Check for X */
+          {
+            if (($("#" + pair[0]).attr("class") == "X") &&
+                ($("#" + pair[1]).attr("class") == "X"))
+            {
+              endGame(1);
+              return;
+            }
+          }
+        }
+
+        /* Check for a tie */
+        let isTie = true;
+        $("button").each(function() {
+          if ($(this).attr("class") == "blank")
+          {
+            isTie = false;
+          }
+        });
+
+        if (isTie) { endGame(2); }
+      });
+    });
+
+    /* Ending the game */
+    /* 0 is O win, 1 is X win, 2 is tie */ 
+    function endGame(winner) {
+      gameActive = false;
+      if (winner == 0) {
+        $("#announcements").text("O wins");
+      }
+      else if (winner == 1)
+      {
+        $("#announcements").text("X wins");
+      }
+      else {
+        $("#announcements").text("It's a tie!");
+      }
+      $("#announcements").append("<p>Click any square to play again!</p>");
+    };
+
+    /* Reset the game */
+    function resetGame()
+    {
+      /* Clear all tiles */
+      $("button").attr("class", "blank");
+
+      /* Reset text */
+      $("#announcements").text("O moves first!");
+
+      /* Reset variables */
+      turn = 0;
+      gameActive = true;
     }
   </script>
 </html>
